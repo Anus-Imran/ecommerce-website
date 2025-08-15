@@ -3,6 +3,8 @@ import { assets } from '../assets/assets';
 import axios from 'axios';
 import { Star } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { useContext } from 'react';
+import { ShopContext } from '../context/ShopContext';
 
 const ReviewForm = ({ productId, onReviewSubmitted }) => {
     const [rating, setRating] = useState(0);
@@ -13,6 +15,7 @@ const ReviewForm = ({ productId, onReviewSubmitted }) => {
         message: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { backendURL } = useContext(ShopContext)
 
     const handleStarClick = (starValue) => {
         setRating(starValue);
@@ -49,7 +52,7 @@ const ReviewForm = ({ productId, onReviewSubmitted }) => {
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('http://localhost:4000/api/review/add', {
+            const response = await axios.post(backendURL + '/api/review/add', {
                 productId,
                 rating,
                 ...formData
