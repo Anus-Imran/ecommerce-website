@@ -11,7 +11,7 @@ import { Star } from 'lucide-react';
 const Product = () => {
 
   const { productId } = useParams();
-  const { products, currency, addToCart } = useContext(ShopContext);
+  const { products, currency, addToCart, backendURL } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('')
   const [size, setSize] = useState('')
@@ -34,9 +34,11 @@ const Product = () => {
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:4000/api/review/product/${productId}`);
+      const response = await axios.get(`${backendURL}/api/review/product/${productId}`);
       const data = response.data;
-      
+
+      console.log(data);
+
       if (data.success) {
         setReviews(data.reviews);
         setAverageRating(data.averageRating);
@@ -82,15 +84,15 @@ const Product = () => {
           <h1 className='font-medium text-2xl mt-2'>
             {productData.name}
           </h1>
-                     <div className='flex items-center gap-1 mt-2'>
-             {[1, 2, 3, 4, 5].map((star) => (
-               <Star 
-                 key={star}
-                 className={`w-3.5 ${star <= averageRating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`}
-               />
-             ))}
-             <p className='pl-2'>({totalReviews})</p>
-           </div>
+          <div className='flex items-center gap-1 mt-2'>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`w-3.5 ${star <= averageRating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`}
+              />
+            ))}
+            <p className='pl-2'>({totalReviews})</p>
+          </div>
           <div className='flex items-center mt-5 text-3xl font-medium'>
 
             <p className='pr-3 text-xl line-through text-gray-500'>
@@ -128,20 +130,20 @@ const Product = () => {
       {/* Description & Review section  */}
       <div className='mt-20'>
         <div className='flex'>
-          <button 
+          <button
             onClick={() => setActiveTab('description')}
             className={`px-5 py-3 text-sm border cursor-pointer ${activeTab === 'description' ? 'bg-black text-white' : 'bg-white text-black'}`}
           >
             Description
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('reviews')}
             className={`px-5 py-3 text-sm border cursor-pointer ${activeTab === 'reviews' ? 'bg-black text-white' : 'bg-white text-black'}`}
           >
             Reviews ({totalReviews})
           </button>
         </div>
-        
+
         <div className='border px-6 py-6'>
           {activeTab === 'description' ? (
             <div className='flex flex-col gap-4 text-sm text-gray-500'>
@@ -156,13 +158,13 @@ const Product = () => {
                 </div>
               ) : (
                 <>
-                  <ReviewList 
-                    reviews={reviews} 
-                    averageRating={averageRating} 
-                    totalReviews={totalReviews} 
+                  <ReviewList
+                    reviews={reviews}
+                    averageRating={averageRating}
+                    totalReviews={totalReviews}
                   />
-                  <ReviewForm 
-                    productId={productId} 
+                  <ReviewForm
+                    productId={productId}
                     onReviewSubmitted={handleReviewSubmitted}
                   />
                 </>
