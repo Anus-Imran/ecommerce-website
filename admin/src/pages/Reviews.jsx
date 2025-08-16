@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Star } from 'lucide-react';
 import axios from 'axios';
+import { backendURL } from '../App'
 
 const Reviews = () => {
     const [reviews, setReviews] = useState([]);
@@ -8,9 +9,9 @@ const Reviews = () => {
 
     const fetchReviews = async () => {
         try {
-            const response = await axios.get('http://localhost:4000/api/review/all');
+            const response = await axios.get(backendURL + '/api/review/all');
             const data = response.data;
-            
+
             if (data.success) {
                 setReviews(data.reviews);
             }
@@ -47,7 +48,7 @@ const Reviews = () => {
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-6">Product Reviews</h1>
-            
+
             {reviews.length === 0 ? (
                 <div className="text-center py-8">
                     <p className="text-gray-500 text-lg">No reviews found.</p>
@@ -74,22 +75,22 @@ const Reviews = () => {
                                             {review.rating} star{review.rating !== 1 ? 's' : ''}
                                         </span>
                                     </div>
-                                    
+
                                     <p className="text-sm text-gray-600 mb-2">
                                         Email: {review.email}
                                     </p>
-                                    
+
                                     {review.productId && (
                                         <p className="text-sm text-gray-600 mb-2">
                                             Product: {review.productId.name || 'Product not found'}
                                         </p>
                                     )}
-                                    
+
                                     <p className="text-gray-700 leading-relaxed">
                                         {review.message}
                                     </p>
                                 </div>
-                                
+
                                 <div className="text-right">
                                     <span className="text-sm text-gray-500">
                                         {formatDate(review.date)}
